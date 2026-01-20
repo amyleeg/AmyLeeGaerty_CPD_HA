@@ -1,5 +1,8 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../models/session.dart';
 
 class SavedSessionsScreen extends StatefulWidget {
   const SavedSessionsScreen({super.key});
@@ -9,7 +12,7 @@ class SavedSessionsScreen extends StatefulWidget {
 }
 
 class _SavedSessionsScreenState extends State<SavedSessionsScreen> {
-  List<String> savedSessions = [];
+  List<Session> savedSessions = [];
 
   @override
   void initState() {
@@ -19,16 +22,19 @@ class _SavedSessionsScreenState extends State<SavedSessionsScreen> {
 
   Future<void> _loadSessions() async {
     final prefs = await SharedPreferences.getInstance();
-    final sessions = prefs.getStringList('planned_sessions') ?? [];
+    final stored = prefs.getStringList('planned_sessions') ?? [];
     setState(() {
-      savedSessions = sessions;
+      savedSessions = stored
+          .map((e) => Session.fromJson(jsonDecode(e)))
+          .toList();
     });
   }
 
   Future<void> _deleteSession(int index) async {
     final prefs = await SharedPreferences.getInstance();
     savedSessions.removeAt(index);
-    await prefs.setStringList('planned_sessions', savedSessions);
+    final encoded = savedSessions.map((s) => jsonEncode(s.toJson())).toList();
+    await prefs.setStringList('planned_sessions', encoded);
     setState(() {});
   }
 
@@ -41,27 +47,34 @@ class _SavedSessionsScreenState extends State<SavedSessionsScreen> {
           : ListView.builder(
               itemCount: savedSessions.length,
               itemBuilder: (context, index) {
+                final session = savedSessions[index];
                 return Dismissible(
-                  key: Key(savedSessions[index]),
-                  direction: DismissDirection.startToEnd,
+                  key: Key(session.date + index.toString()),
+                  direction: DismissDirection.endToStart,
                   background: Container(
                     color: Colors.red,
                     alignment: Alignment.centerRight,
                     padding: const EdgeInsets.only(right: 20),
                     child: const Icon(Icons.delete, color: Colors.white),
                   ),
-                  onDismissed: (direction) {
-                    _deleteSession(index);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Session deleted')),
-                    );
-                  },
+                  onDismissed: (_) => _deleteSession(index),
                   child: Card(
                     margin: const EdgeInsets.symmetric(
                       horizontal: 12,
                       vertical: 6,
                     ),
-                    child: ListTile(title: Text(savedSessions[index])),
+                    child: ListTile(
+                      leading: session.imagePath != null
+                          ? Image.file(
+                              File(session.imagePath!),
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.cover,
+                            )
+                          : null,
+                      title: Text(session.date),
+                      subtitle: Text(session.notes),
+                    ),
                   ),
                 );
               },

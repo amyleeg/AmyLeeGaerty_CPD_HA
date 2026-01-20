@@ -1,15 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:ink_log/providers/session_provider.dart';
+import 'package:ink_log/screens/favorite_tattoos_screen.dart';
 import 'package:ink_log/services/notification_service.dart';
 import 'package:provider/provider.dart';
 import 'providers/tattoo_provider.dart';
 import 'screens/gallery_screen.dart';
 import 'screens/planner_screen.dart';
 import 'screens/saved_sessions_screen.dart';
+import '../data/tattoos.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await NotificationService.init();
-  runApp(const InkLogApp());
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => TattooProvider()),
+        ChangeNotifierProvider(create: (_) => SessionProvider()),
+      ],
+      child: const InkLogApp(),
+    ),
+  );
 }
 
 class InkLogApp extends StatelessWidget {
@@ -19,10 +31,25 @@ class InkLogApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => TattooProvider(),
-      child: const MaterialApp(
+      child: MaterialApp(
         title: 'InkLog',
         debugShowCheckedModeBanner: false,
-        home: HomeNavigation(),
+        theme: ThemeData(
+          brightness: Brightness.dark, // sets a dark theme
+          scaffoldBackgroundColor: Colors.black, // main background
+          primaryColor: Colors.black, // AppBar color
+          bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+            backgroundColor: Colors.black,
+            selectedItemColor: Colors.white,
+            unselectedItemColor: Color.fromARGB(255, 81, 81, 81),
+          ),
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Colors.black,
+            foregroundColor: Colors.white, // text/icons color
+          ),
+          cardColor: Colors.grey[900], // background for cards
+        ),
+        home: const HomeNavigation(),
       ),
     );
   }
@@ -42,6 +69,7 @@ class _HomeNavigationState extends State<HomeNavigation> {
     GalleryScreen(),
     PlannerScreen(),
     SavedSessionsScreen(),
+    FavoriteTattoosScreen(allTattoos: tattoos),
   ];
 
   void _onItemTapped(int index) {
@@ -57,14 +85,17 @@ class _HomeNavigationState extends State<HomeNavigation> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        selectedItemColor: Colors.black,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.image), label: 'Gallery'),
           BottomNavigationBarItem(
             icon: Icon(Icons.event_note),
             label: 'Planner',
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.save), label: 'Saved'),
+          BottomNavigationBarItem(icon: Icon(Icons.save), label: 'Sessions'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Favorites',
+          ),
         ],
       ),
     );

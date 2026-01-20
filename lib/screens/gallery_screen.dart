@@ -2,19 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/tattoo_provider.dart';
 import '../models/tattoo.dart';
+import '../data/tattoos.dart';
 
 class GalleryScreen extends StatelessWidget {
   GalleryScreen({super.key});
-
-  final List<Tattoo> tattoos = [
-    Tattoo(id: 1, title: 'Back Flower', imagePath: 'assets/images/tattoo1.jpg'),
-    Tattoo(id: 2, title: 'Tiger', imagePath: 'assets/images/tattoo2.jpg'),
-    Tattoo(
-      id: 3,
-      title: 'Dotwork Skull',
-      imagePath: 'assets/images/tattoo3.jpg',
-    ),
-  ];
 
   @override
   Widget build(BuildContext context) {

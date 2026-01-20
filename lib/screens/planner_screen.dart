@@ -1,8 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../services/notification_service.dart';
-import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import '../models/session.dart';
+import '../services/notification_service.dart';
 import 'saved_sessions_screen.dart';
 
 class PlannerScreen extends StatefulWidget {
@@ -33,20 +35,47 @@ class _PlannerScreenState extends State<PlannerScreen> {
     }
   }
 
-  @override
-  void dispose() {
-    notesController.dispose();
-    super.dispose();
-  }
-
   Future<void> _takePhoto() async {
     final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
-
     if (photo != null) {
       setState(() {
         _image = File(photo.path);
       });
     }
+  }
+
+  Future<void> _saveSession() async {
+    if (selectedDate == null) return;
+
+    final prefs = await SharedPreferences.getInstance();
+    final List<String> stored = prefs.getStringList('planned_sessions') ?? [];
+
+    final session = Session(
+      date: selectedDate!.toLocal().toString().split(' ')[0],
+      notes: notesController.text,
+      imagePath: _image?.path,
+      title: '',
+    );
+
+    stored.add(jsonEncode(session.toJson()));
+    await prefs.setStringList('planned_sessions', stored);
+
+    NotificationService.showNotification();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Session saved and reminder set')),
+    );
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const SavedSessionsScreen()),
+    );
+  }
+
+  @override
+  void dispose() {
+    notesController.dispose();
+    super.dispose();
   }
 
   @override
@@ -63,7 +92,6 @@ class _PlannerScreenState extends State<PlannerScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-
             ElevatedButton(
               onPressed: _pickDate,
               child: Text(
@@ -72,9 +100,7 @@ class _PlannerScreenState extends State<PlannerScreen> {
                     : 'Date: ${selectedDate!.toLocal().toString().split(' ')[0]}',
               ),
             ),
-
             const SizedBox(height: 16),
-
             TextField(
               controller: notesController,
               decoration: const InputDecoration(
@@ -83,50 +109,19 @@ class _PlannerScreenState extends State<PlannerScreen> {
               ),
               maxLines: 3,
             ),
-
-            const SizedBox(height: 24),
-
             const SizedBox(height: 16),
-
             ElevatedButton.icon(
               onPressed: _takePhoto,
               icon: const Icon(Icons.camera_alt),
               label: const Text('Take Reference Photo'),
             ),
-
             const SizedBox(height: 12),
-
             if (_image != null)
               Image.file(_image!, height: 200, fit: BoxFit.cover),
-
+            const SizedBox(height: 24),
             Center(
               child: ElevatedButton(
-                onPressed: () async {
-                  final prefs = await SharedPreferences.getInstance();
-                  final List<String> sessions =
-                      prefs.getStringList('planned_sessions') ?? [];
-
-                  final sessionString =
-                      '${selectedDate?.toLocal().toString().split(' ')[0] ?? 'No date'} - ${notesController.text}';
-                  sessions.add(sessionString);
-                  await prefs.setStringList('planned_sessions', sessions);
-
-                  NotificationService.showNotification();
-
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Session saved and reminder set'),
-                    ),
-                  );
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const SavedSessionsScreen(),
-                    ),
-                  );
-                },
-
+                onPressed: _saveSession,
                 child: const Text('Save Session'),
               ),
             ),
