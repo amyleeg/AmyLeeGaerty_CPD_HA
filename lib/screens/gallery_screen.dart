@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ink_log/screens/planner_screen.dart';
 import 'package:provider/provider.dart';
 import '../providers/tattoo_provider.dart';
 import '../models/tattoo.dart';
@@ -18,22 +19,36 @@ class GalleryScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Tattoo Gallery')),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.event),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const PlannerScreen()),
+          );
+        },
+      ),
       body: ListView.builder(
         itemCount: tattoos.length,
         itemBuilder: (context, index) {
           final tattoo = tattoos[index];
           final isLiked = tattooProvider.isLiked(tattoo.id);
 
-          return ListTile(
-            title: Text(tattoo.title),
-            trailing: IconButton(
-              icon: Icon(
-                isLiked ? Icons.favorite : Icons.favorite_border,
-                color: isLiked ? Colors.red : null,
+          return Card(
+            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            child: ListTile(
+              leading: const Icon(Icons.brush),
+              title: Text(tattoo.title),
+              subtitle: const Text('Tap heart to save inspiration'),
+              trailing: IconButton(
+                icon: Icon(
+                  isLiked ? Icons.favorite : Icons.favorite_border,
+                  color: isLiked ? Colors.red : null,
+                ),
+                onPressed: () {
+                  tattooProvider.toggleLike(tattoo.id);
+                },
               ),
-              onPressed: () {
-                tattooProvider.toggleLike(tattoo.id);
-              },
             ),
           );
         },
