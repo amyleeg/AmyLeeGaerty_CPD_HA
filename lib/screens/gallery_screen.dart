@@ -19,15 +19,7 @@ class GalleryScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Tattoo Gallery')),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.event),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const PlannerScreen()),
-          );
-        },
-      ),
+
       body: ListView.builder(
         itemCount: tattoos.length,
         itemBuilder: (context, index) {
