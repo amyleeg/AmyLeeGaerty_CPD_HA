@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'providers/tattoo_provider.dart';
+import 'screens/gallery_screen.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(const InkLogApp());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class InkLogApp extends StatelessWidget {
+  const InkLogApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
+    return ChangeNotifierProvider(
+      create: (_) => TattooProvider(),
+      child: MaterialApp(
+        title: 'InkLog',
+        theme: ThemeData(primaryColor: Colors.black),
+        home: GalleryScreen(),
       ),
     );
   }
