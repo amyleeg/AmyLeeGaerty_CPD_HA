@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ink_log/screens/planner_screen.dart';
 import 'package:provider/provider.dart';
 import '../providers/tattoo_provider.dart';
 import '../models/tattoo.dart';
@@ -8,9 +7,13 @@ class GalleryScreen extends StatelessWidget {
   GalleryScreen({super.key});
 
   final List<Tattoo> tattoos = [
-    Tattoo(id: 1, title: 'Minimal Rose', imagePath: ''),
-    Tattoo(id: 2, title: 'Geometric Wolf', imagePath: ''),
-    Tattoo(id: 3, title: 'Traditional Skull', imagePath: ''),
+    Tattoo(id: 1, title: 'Back Flower', imagePath: 'assets/images/tattoo1.jpg'),
+    Tattoo(id: 2, title: 'Tiger', imagePath: 'assets/images/tattoo2.jpg'),
+    Tattoo(
+      id: 3,
+      title: 'Dotwork Skull',
+      imagePath: 'assets/images/tattoo3.jpg',
+    ),
   ];
 
   @override
@@ -27,20 +30,41 @@ class GalleryScreen extends StatelessWidget {
           final isLiked = tattooProvider.isLiked(tattoo.id);
 
           return Card(
-            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            child: ListTile(
-              leading: const Icon(Icons.brush),
-              title: Text(tattoo.title),
-              subtitle: const Text('Tap heart to save inspiration'),
-              trailing: IconButton(
-                icon: Icon(
-                  isLiked ? Icons.favorite : Icons.favorite_border,
-                  color: isLiked ? Colors.red : null,
+            margin: const EdgeInsets.all(8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Image.asset(
+                  tattoo.imagePath,
+                  width: double.infinity,
+                  height: 180,
+                  fit: BoxFit.cover,
                 ),
-                onPressed: () {
-                  tattooProvider.toggleLike(tattoo.id);
-                },
-              ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    tattoo.title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      icon: Icon(
+                        tattooProvider.isLiked(tattoo.id)
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                        color: Colors.red,
+                      ),
+                      onPressed: () => tattooProvider.toggleLike(tattoo.id),
+                    ),
+                  ],
+                ),
+              ],
             ),
           );
         },

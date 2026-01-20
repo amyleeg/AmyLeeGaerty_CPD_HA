@@ -25,6 +25,13 @@ class _SavedSessionsScreenState extends State<SavedSessionsScreen> {
     });
   }
 
+  Future<void> _deleteSession(int index) async {
+    final prefs = await SharedPreferences.getInstance();
+    savedSessions.removeAt(index);
+    await prefs.setStringList('planned_sessions', savedSessions);
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,12 +41,28 @@ class _SavedSessionsScreenState extends State<SavedSessionsScreen> {
           : ListView.builder(
               itemCount: savedSessions.length,
               itemBuilder: (context, index) {
-                return Card(
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
+                return Dismissible(
+                  key: Key(savedSessions[index]),
+                  direction: DismissDirection.startToEnd,
+                  background: Container(
+                    color: Colors.red,
+                    alignment: Alignment.centerRight,
+                    padding: const EdgeInsets.only(right: 20),
+                    child: const Icon(Icons.delete, color: Colors.white),
                   ),
-                  child: ListTile(title: Text(savedSessions[index])),
+                  onDismissed: (direction) {
+                    _deleteSession(index);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Session deleted')),
+                    );
+                  },
+                  child: Card(
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    child: ListTile(title: Text(savedSessions[index])),
+                  ),
                 );
               },
             ),

@@ -38,7 +38,7 @@ class HomeNavigation extends StatefulWidget {
 class _HomeNavigationState extends State<HomeNavigation> {
   int _selectedIndex = 0;
 
-  static List<Widget> _screens = <Widget>[
+  static final List<Widget> _screens = <Widget>[
     GalleryScreen(),
     PlannerScreen(),
     SavedSessionsScreen(),
