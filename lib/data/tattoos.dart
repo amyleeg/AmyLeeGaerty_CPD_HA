@@ -9,9 +9,5 @@ final List<Tattoo> tattoos = [
     title: 'Minimalist Wrist',
     imagePath: 'assets/images/tattoo4.jpg',
   ),
-  Tattoo(
-    id: 5,
-    title: 'Traditional Chest',
-    imagePath: 'assets/images/tattoo5.jpg',
-  ),
+  Tattoo(id: 5, title: 'Linework Ear', imagePath: 'assets/images/tattoo5.jpg'),
 ];

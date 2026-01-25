@@ -3,7 +3,9 @@
 <plist version="1.0">
 <dict>
 <key>NSCameraUsageDescription</key>
-<string>This app uses the camera to capture tattoo inspiration photos.</string>
+<string>We need access to your camera to take reference photos.</string>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>We need access to your photo library for saved photos.</string>
 
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>

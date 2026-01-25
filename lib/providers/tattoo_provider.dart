@@ -1,29 +1,37 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TattooProvider extends ChangeNotifier {
   final Set<int> _likedTattooIds = {};
 
   TattooProvider() {
-    _initialize();
+    _init();
   }
 
-  Future<void> _initialize() async {
-    final prefs = await SharedPreferences.getInstance();
-    final saved = prefs.getStringList('liked_tattoos') ?? [];
-    _likedTattooIds.addAll(saved.map(int.parse));
-    notifyListeners(); // updates UI after loading
+  Future<void> _init() async {
+    await _loadLikes();
   }
 
-  bool isLiked(int id) => _likedTattooIds.contains(id);
+  bool isLiked(int tattooId) {
+    return _likedTattooIds.contains(tattooId);
+  }
 
-  void toggleLike(int id) {
-    if (_likedTattooIds.contains(id)) {
-      _likedTattooIds.remove(id);
+  void toggleLike(int tattooId) {
+    if (_likedTattooIds.contains(tattooId)) {
+      _likedTattooIds.remove(tattooId);
     } else {
-      _likedTattooIds.add(id);
+      _likedTattooIds.add(tattooId);
     }
     _saveLikes();
+    notifyListeners();
+  }
+
+  Future<void> _loadLikes() async {
+    final prefs = await SharedPreferences.getInstance();
+    final storedIds = prefs.getStringList('liked_tattoos') ?? [];
+    _likedTattooIds
+      ..clear()
+      ..addAll(storedIds.map(int.parse));
     notifyListeners();
   }
 

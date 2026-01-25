@@ -29,28 +29,24 @@ class InkLogApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => TattooProvider(),
-      child: MaterialApp(
-        title: 'InkLog',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          brightness: Brightness.dark, // sets a dark theme
-          scaffoldBackgroundColor: Colors.black, // main background
-          primaryColor: Colors.black, // AppBar color
-          bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-            backgroundColor: Colors.black,
-            selectedItemColor: Colors.white,
-            unselectedItemColor: Color.fromARGB(255, 81, 81, 81),
-          ),
-          appBarTheme: const AppBarTheme(
-            backgroundColor: Colors.black,
-            foregroundColor: Colors.white, // text/icons color
-          ),
-          cardColor: Colors.grey[900], // background for cards
+    return MaterialApp(
+      title: 'InkLog',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: Colors.black,
+        primaryColor: Colors.black,
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          backgroundColor: Colors.black,
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Color.fromARGB(255, 81, 81, 81),
         ),
-        home: const HomeNavigation(),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.black,
+          foregroundColor: Colors.white,
+        ),
       ),
+      home: const HomeNavigation(),
     );
   }
 }
@@ -65,12 +61,18 @@ class HomeNavigation extends StatefulWidget {
 class _HomeNavigationState extends State<HomeNavigation> {
   int _selectedIndex = 0;
 
-  static final List<Widget> _screens = <Widget>[
-    GalleryScreen(),
-    PlannerScreen(),
-    SavedSessionsScreen(),
-    FavoriteTattoosScreen(allTattoos: tattoos),
-  ];
+  late final List<Widget> _screens;
+
+  @override
+  void initState() {
+    super.initState();
+    _screens = [
+      GalleryScreen(),
+      PlannerScreen(),
+      SavedSessionsScreen(),
+      FavoriteTattoosScreen(allTattoos: tattoos),
+    ];
+  }
 
   void _onItemTapped(int index) {
     setState(() {

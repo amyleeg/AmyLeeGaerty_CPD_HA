@@ -1,33 +1,41 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/session.dart';
 
 class SessionProvider extends ChangeNotifier {
   List<Session> _sessions = [];
-
-  SessionProvider() {
-    _initialize();
-  }
+  bool _isLoading = true;
 
   List<Session> get sessions => _sessions;
+  bool get isLoading => _isLoading;
 
-  Future<void> _initialize() async {
+  SessionProvider() {
+    _init();
+  }
+
+  Future<void> _init() async {
+    await _loadSessions();
+  }
+
+  Future<void> addSession(Session session) async {
+    _sessions.add(session);
+    await _saveSessions();
+    notifyListeners();
+  }
+
+  Future<void> removeSession(int index) async {
+    _sessions.removeAt(index);
+    await _saveSessions();
+    notifyListeners();
+  }
+
+  Future<void> _loadSessions() async {
     final prefs = await SharedPreferences.getInstance();
     final stored = prefs.getStringList('planned_sessions') ?? [];
     _sessions = stored.map((e) => Session.fromJson(jsonDecode(e))).toList();
-    notifyListeners();
-  }
 
-  void addSession(Session session) {
-    _sessions.add(session);
-    _saveSessions();
-    notifyListeners();
-  }
-
-  void removeSession(int index) {
-    _sessions.removeAt(index);
-    _saveSessions();
+    _isLoading = false;
     notifyListeners();
   }
 
