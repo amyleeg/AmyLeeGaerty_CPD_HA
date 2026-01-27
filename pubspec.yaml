@@ -11,11 +11,11 @@ dependencies:
     sdk: flutter
   provider: ^6.0.5
   shared_preferences: ^2.2.2
-  image_picker: ^0.8.7+5   # <- updated to null-safe version
+  image_picker: ^0.8.7+5  
   flutter_local_notifications: ^17.0.0
   firebase_core: ^2.27.0
   firebase_analytics: ^10.8.0
-  path_provider: ^2.0.15    # <- fixed placement
+  path_provider: ^2.0.15   
 
 dev_dependencies:
   flutter_test:

@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import '../models/session.dart';
 import '../services/notification_service.dart';
-import 'saved_sessions_screen.dart';
 import 'package:path_provider/path_provider.dart';
 
 class PlannerScreen extends StatefulWidget {
@@ -21,7 +20,6 @@ class _PlannerScreenState extends State<PlannerScreen> {
   DateTime? selectedDate;
   final TextEditingController notesController = TextEditingController();
 
-  // Pick a date
   void _pickDate() async {
     final DateTime? picked = await showDatePicker(
       context: context,

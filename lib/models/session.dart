@@ -12,16 +12,16 @@ class Session {
   });
 
   Map<String, dynamic> toJson() => {
-    'title': title,
-    'notes': notes,
-    'date': date,
-    'imagePath': imagePath,
-  };
+        'title': title,
+        'notes': notes,
+        'date': date,
+        'imagePath': imagePath,
+      };
 
   factory Session.fromJson(Map<String, dynamic> json) => Session(
-    title: json['title'],
-    notes: json['notes'],
-    date: json['date'],
-    imagePath: json['imagePath'],
-  );
+        title: json['title'],
+        notes: json['notes'],
+        date: json['date'],
+        imagePath: json['imagePath'],
+      );
 }

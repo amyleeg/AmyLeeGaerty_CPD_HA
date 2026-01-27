@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/tattoo_provider.dart';
-import '../models/tattoo.dart'; // Make sure your Tattoo model is imported
+import '../models/tattoo.dart';
 
 class FavoriteTattoosScreen extends StatelessWidget {
   final List<Tattoo> allTattoos;
@@ -11,9 +11,8 @@ class FavoriteTattoosScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<TattooProvider>(context);
-    final likedTattoos = allTattoos
-        .where((t) => provider.isLiked(t.id))
-        .toList();
+    final likedTattoos =
+        allTattoos.where((t) => provider.isLiked(t.id)).toList();
 
     return Scaffold(
       appBar: AppBar(title: const Text('Favorite Tattoos')),

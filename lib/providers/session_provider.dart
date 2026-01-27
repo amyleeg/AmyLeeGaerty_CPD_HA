@@ -15,7 +15,7 @@ class SessionProvider extends ChangeNotifier {
   }
 
   Future<void> _init() async {
-    await _loadSessions();
+    await loadSessions();
   }
 
   Future<void> addSession(Session session) async {
@@ -30,7 +30,7 @@ class SessionProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _loadSessions() async {
+  Future<void> loadSessions() async {
     final prefs = await SharedPreferences.getInstance();
     final stored = prefs.getStringList('planned_sessions') ?? [];
     _sessions = stored.map((e) => Session.fromJson(jsonDecode(e))).toList();
@@ -43,5 +43,6 @@ class SessionProvider extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     final encoded = _sessions.map((s) => jsonEncode(s.toJson())).toList();
     await prefs.setStringList('planned_sessions', encoded);
+    print("Saved sessions: $encoded");
   }
 }

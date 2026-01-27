@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:ink_log/providers/session_provider.dart';
 import 'package:provider/provider.dart';
 import '../providers/tattoo_provider.dart';
 import '../models/tattoo.dart';
 import '../data/tattoos.dart';
 
 class GalleryScreen extends StatelessWidget {
-  GalleryScreen({super.key});
+  const GalleryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +14,6 @@ class GalleryScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Tattoo Gallery')),
-
       body: ListView.builder(
         itemCount: tattoos.length,
         itemBuilder: (context, index) {
@@ -52,7 +52,10 @@ class GalleryScreen extends StatelessWidget {
                         color: Colors.red,
                       ),
                       onPressed: () => tattooProvider.toggleLike(tattoo.id),
-                    ),
+                      tooltip: tattooProvider.isLiked(tattoo.id)
+                          ? 'Unlike ${tattoo.title}'
+                          : 'Like ${tattoo.title}',
+                    )
                   ],
                 ),
               ],

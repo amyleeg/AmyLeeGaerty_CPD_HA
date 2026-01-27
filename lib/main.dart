@@ -11,13 +11,17 @@ import '../data/tattoos.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await NotificationService.init();
+
+  final sessionProvider = SessionProvider();
+  await sessionProvider.loadSessions();
 
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => TattooProvider()),
-        ChangeNotifierProvider(create: (_) => SessionProvider()),
+        ChangeNotifierProvider(create: (_) => sessionProvider),
       ],
       child: const InkLogApp(),
     ),
@@ -60,7 +64,6 @@ class HomeNavigation extends StatefulWidget {
 
 class _HomeNavigationState extends State<HomeNavigation> {
   int _selectedIndex = 0;
-
   late final List<Widget> _screens;
 
   @override
@@ -90,14 +93,10 @@ class _HomeNavigationState extends State<HomeNavigation> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.image), label: 'Gallery'),
           BottomNavigationBarItem(
-            icon: Icon(Icons.event_note),
-            label: 'Planner',
-          ),
+              icon: Icon(Icons.event_note), label: 'Planner'),
           BottomNavigationBarItem(icon: Icon(Icons.save), label: 'Sessions'),
           BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Favorites',
-          ),
+              icon: Icon(Icons.favorite), label: 'Favorites'),
         ],
       ),
     );
