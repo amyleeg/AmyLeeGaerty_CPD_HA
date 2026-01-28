@@ -53,8 +53,14 @@ class SavedSessionsScreen extends StatelessWidget {
                             fit: BoxFit.cover,
                           )
                         : null,
-                    title: Text(session.date),
-                    subtitle: Text(session.notes),
+                    title: Text(session.title),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Date: ${session.date}'),
+                        Text(session.notes),
+                      ],
+                    ),
                   ),
                 ),
               );

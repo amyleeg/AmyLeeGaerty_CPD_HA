@@ -15,6 +15,8 @@ class PlannerScreen extends StatefulWidget {
 }
 
 class _PlannerScreenState extends State<PlannerScreen> {
+  final TextEditingController titleController = TextEditingController();
+
   final ImagePicker _picker = ImagePicker();
   File? _image;
   DateTime? selectedDate;
@@ -71,7 +73,7 @@ class _PlannerScreenState extends State<PlannerScreen> {
       date: selectedDate!.toLocal().toString().split(' ')[0],
       notes: notesController.text,
       imagePath: savedImagePath,
-      title: '',
+      title: titleController.text,
     );
 
     await Provider.of<SessionProvider>(context, listen: false)
@@ -84,6 +86,7 @@ class _PlannerScreenState extends State<PlannerScreen> {
     );
 
     setState(() {
+      titleController.clear();
       _image = null;
       notesController.clear();
       selectedDate = null;
@@ -92,6 +95,7 @@ class _PlannerScreenState extends State<PlannerScreen> {
 
   @override
   void dispose() {
+    titleController.dispose();
     notesController.dispose();
     super.dispose();
   }
@@ -117,6 +121,14 @@ class _PlannerScreenState extends State<PlannerScreen> {
                   selectedDate == null
                       ? 'Select Date'
                       : 'Date: ${selectedDate!.toLocal().toString().split(' ')[0]}',
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: titleController,
+                decoration: const InputDecoration(
+                  labelText: 'Session Title',
+                  border: OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 16),

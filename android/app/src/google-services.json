@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "490468540907",
+    "project_id": "amyleegaertyinklog",
+    "storage_bucket": "amyleegaertyinklog.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:490468540907:android:e322b54294e5c071d3d9ae",
+        "android_client_info": {
+          "package_name": "com.example.ink_log"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcH80RP3NQd8QmbetkhX7VS_JeQAIndCg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
