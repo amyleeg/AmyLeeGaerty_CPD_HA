@@ -64,7 +64,7 @@ class SessionProvider extends ChangeNotifier {
           'title': s.title.isNotEmpty ? s.title : 'no_title',
           'notes': s.notes.isNotEmpty ? s.notes : 'no_notes',
           'has_image': s.imagePath != null,
-          'image_path': s.imagePath ?? 'no_image',
+          'image_path': (s.imagePath != null).toString(),
         },
       );
     }
