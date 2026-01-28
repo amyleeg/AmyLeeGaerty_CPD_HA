@@ -1,4 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:ink_log/providers/session_provider.dart';
 import 'package:ink_log/screens/favorite_tattoos_screen.dart';

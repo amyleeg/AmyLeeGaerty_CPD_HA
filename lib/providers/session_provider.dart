@@ -54,6 +54,19 @@ class SessionProvider extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     final encoded = _sessions.map((s) => jsonEncode(s.toJson())).toList();
     await prefs.setStringList('planned_sessions', encoded);
+
     print("Saved sessions: $encoded");
+
+    for (final s in _sessions) {
+      FirebaseAnalytics.instance.logEvent(
+        name: 'session_saved',
+        parameters: {
+          'title': s.title.isNotEmpty ? s.title : 'no_title',
+          'notes': s.notes.isNotEmpty ? s.notes : 'no_notes',
+          'has_image': s.imagePath != null,
+          'image_path': s.imagePath ?? 'no_image',
+        },
+      );
+    }
   }
 }
